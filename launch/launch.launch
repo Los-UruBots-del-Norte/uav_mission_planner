@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<launch>
+  <!-- Include main launch file -->
+  <remap from="/zedm/zed_node/pose" to="/mavros/vision_pose/pose" /> 
+  <remap from="/zedm/zed_node/pose_with_covariance" to="/mavros/vision_pose/pose_cov" />
+  <include file="$(find zed_wrapper)/launch/zedm.launch"></include>
+  <include file="$(find mavros)/launch/px4.launch"></include>
+</launch>
