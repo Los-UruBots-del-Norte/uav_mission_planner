@@ -2,5 +2,7 @@
 
 <launch>
   <!-- Include main launch file -->
+  <node name="webcam_publisher" pkg="uav_mission_planner" type="webcam_publisher.py"/>
+  <node name="qr_code_detector" pkg="uav_mission_planner" type="qr_code_detector.py" output="screen"/>
   <node name="node" pkg="uav_mission_planner" type="uav_mission_planner.py" output="screen"/>
 </launch>

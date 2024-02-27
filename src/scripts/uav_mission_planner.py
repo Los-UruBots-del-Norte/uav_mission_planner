@@ -66,6 +66,15 @@ def globalPositionCallback(globalPositionCallback):
     longitude = globalPositionCallback.longitude
     #print ("longitude: %.7f" %longitude)
     #print ("latitude: %.7f" %latitude)
+#TODO: send coordinates to go to on params
+def go_to_coordinates():
+    rospy.wait_for_service('/mavros/set_position_target')
+    try:
+        set_target = rospy.ServiceProxy('/mavros/set_position_target', mavros_msgs.srv.SetPositionTarget)
+        # TODO set the coordinates to go to
+        set_target(0, 0, 0, 0, 0, 0, 0, 0)
+    except rospy.ServiceException as e:
+        print("Service set_position_target call failed: %s" % e)
 
 def menu():
     print("Press")
@@ -76,10 +85,12 @@ def menu():
     print("5: to set mode to TAKEOFF")
     print("6: to set mode to LAND")
     print("7: print GPS coordinates")
+    print("8: go to coordinates")
+
     
 def myLoop():
     x='1'
-    while ((not rospy.is_shutdown())and (x in ['1','2','3','4','5','6','7'])):
+    while ((not rospy.is_shutdown())and (x in ['1','2','3','4','5','6','7','8'])):
         menu()
         x = raw_input("Enter your input: ");
         if (x=='1'):
@@ -99,7 +110,9 @@ def myLoop():
             global longitude
             print ("longitude: %.7f" %longitude)
             print ("latitude: %.7f" %latitude)
-        else: 
+        elif(x=='8'):
+            go_to_coordinates()
+        else:
             print("Exit")
 
 if __name__ == '__main__':
