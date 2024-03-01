@@ -23,11 +23,14 @@ class ImagePublisher:
                 if not r:
                     return
                 self.pub.publish(self.bridge.cv2_to_imgmsg(frame, "bgr8"))
+
                 # BGR8
                 self.bgr8pub.publish(self.bridge.cv2_to_imgmsg(frame, "bgr8"))
+
                 # RGB8
                 frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 self.rgb8pub.publish(self.bridge.cv2_to_imgmsg(frame_rgb, "rgb8"))
+
                 # MONO8
                 frame_mono = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 self.mono8pub.publish(self.bridge.cv2_to_imgmsg(frame_mono, "mono8"))
