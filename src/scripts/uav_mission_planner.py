@@ -77,18 +77,27 @@ def globalPositionCallback(globalPositionCallback):
     #print ("longitude: %.7f" %longitude)
     #print ("latitude: %.7f" %latitude)
 
-def set_target_position(x,y,z):
+def set_target_position(x,y,z,w):
     pose = PoseStamped()
     pose.pose.position.x = x
     pose.pose.position.y = y
     pose.pose.position.z = z
+    pose.pose.orientation.w = w
+
+    try:
+        set_point_pub = rospy.Publisher("/mavros/setpoint_position/local", PoseStamped, queue_size=10)
+        set_point_pub.publish(pose)
+    except rospy.ServiceException as e:
+        print("Service set_target_position call failed: %s" % e)
+
     
 
-def go_to_destination():
+def go_to_destination(dest = "2.8, 0.0, 2.0, 2.0"):
+    x, y, z, w = dest.split(", ")
     setGuidedMode()
     setArm()
     setTakeoffMode()
-    set_target_position(2.8, 0.0, 2.0, 2.0)
+    set_target_position(x, y, z, w)
 
 
 
@@ -126,7 +135,8 @@ def myLoop():
             print ("longitude: %.7f" %longitude)
             print ("latitude: %.7f" %latitude)
         elif(x=='8'):
-            go_to_destination()
+            dest = raw_input("Enter location to go : example 2.8, 0.0, 2.0, 2.0")
+            go_to_destination(dest)
         else: 
             print("Exit")
 

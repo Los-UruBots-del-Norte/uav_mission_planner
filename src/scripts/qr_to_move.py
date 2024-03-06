@@ -42,10 +42,10 @@ class QRtoMove:
             pose.pose.orientation.z = 1.0
         elif parts[0] == 'S':
             pose.pose.position.x = -1.0
-            pose.pose.position.y = 1.0
+            pose.pose.position.y = 0.0
             pose.pose.orientation.w = -1.0
         elif parts[0] == 'W':
-            pose.pose.position.x = 1.0
+            pose.pose.position.x = 0.0
             pose.pose.position.y = -1.0
             pose.pose.orientation.w = 0.0
             pose.pose.orientation.z = -1.0
