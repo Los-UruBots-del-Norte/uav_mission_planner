@@ -4,6 +4,7 @@ from std_msgs.msg import String
 from sensor_msgs.msg import *
 from mavros_msgs.srv import *
 from mavros_msgs.msg import *
+from geographic_msgs.msg import *
 
 #global variable
 latitude = 0.0
@@ -14,7 +15,16 @@ def call_set_mode(mode, mode_ID):
         service = rospy.ServiceProxy("/mavros/set_mode", SetMode)
         rospy.wait_for_service("/mavros/set_mode")
         print(service(mode_ID, mode))
-    except rospy.ServiceException, e:
+    except rospy.ServiceException as e:
+        print('Service call failed: %s' % e)
+
+def pub_reset_gps():
+    rospy.wait_for_service("/mavros/global_position/set_gp_origin")
+    try:
+        msg = GeoPointStamped()
+        reset_gps = rospy.Publisher("/mavros/global_position/set_gp_origin", GeoPointStamped, queue_size=10)
+        reset_gps.publish(msg)
+    except rospy.ServiceException as e:
         print('Service call failed: %s' % e)
 
 # TODO change to call_set_mode
@@ -47,6 +57,10 @@ def setLandMode():
 def setArm():
     rospy.wait_for_service('/mavros/cmd/arming')
     try:
+        # TODO this is to verify why the drone is arming but not launching
+        rospy.set_param("/mavros/vision_pose/tf/listen", True)
+        pub_reset_gps()
+
         armService = rospy.ServiceProxy('/mavros/cmd/arming', mavros_msgs.srv.CommandBool)
         armService(True)
     except rospy.ServiceException as e:
