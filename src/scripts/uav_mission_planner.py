@@ -79,7 +79,7 @@ def setTakeoffMode():
     rospy.wait_for_service('/mavros/cmd/takeoff')
     try:
         takeoffService = rospy.ServiceProxy('/mavros/cmd/takeoff', mavros_msgs.srv.CommandTOL) 
-        takeoffService(altitude = 2, latitude = 0, longitude = 0, min_pitch = 0, yaw = 0)
+        takeoffService(altitude = 1, latitude = 0, longitude = 0, min_pitch = 0, yaw = 0)
     except rospy.ServiceException as e:
         print("Service takeoff call failed: %s" % e)
 
