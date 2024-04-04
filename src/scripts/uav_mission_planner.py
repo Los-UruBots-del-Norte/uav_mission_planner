@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import time
 import rospy
 from std_msgs.msg import String
 from sensor_msgs.msg import *
@@ -55,6 +56,8 @@ def setLandMode():
         print("service land call failed: %s. The vehicle cannot land " % e)
           
 def setArm():
+    pub_reset_gps()
+    time.sleep(1)
     rospy.wait_for_service('/mavros/cmd/arming')
     try:
         # TODO this is to verify why the drone is arming but not launching
@@ -104,16 +107,24 @@ def set_target_position(x,y,z,w):
     except rospy.ServiceException as e:
         print("Service set_target_position call failed: %s" % e)
 
-    
+def pub_reset_gps():
+    msg = GeoPointStamped()
+    try:
+        reset_gps = rospy.Publisher("/mavros/global_position/set_gp_origin", GeoPointStamped, queue_size=10)
+        reset_gps.publish(msg)
+    except rospy.ServiceException as e:
+        print("Service reset_gps call failed: %s" % e)
 
-def go_to_destination(dest = "2.8, 0.0, 2.0, 2.0"):
-    x, y, z, w = dest.split(", ")
+def go_to_destination(dest = "2.8, 0.0, 2.0, 1.0"):
+    x, y, z, w = dest.split(",")
     setGuidedMode()
+    time.sleep(1)
+    pub_reset_gps()
+    rospy.set_param("/mavros/vision_pose/tf/listen", True)
+    time.sleep(5)
     setArm()
     setTakeoffMode()
     set_target_position(x, y, z, w)
-
-
 
 def menu():
     print("Press")
