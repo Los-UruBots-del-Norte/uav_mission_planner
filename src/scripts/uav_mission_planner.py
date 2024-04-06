@@ -117,6 +117,7 @@ def pub_reset_gps():
 
 def go_to_destination(dest = "2.8, 0.0, 2.0, 1.0"):
     x, y, z, w = dest.split(",")
+    print("split", x,y,z,w)
     setGuidedMode()
     time.sleep(1)
     pub_reset_gps()
@@ -139,9 +140,9 @@ def menu():
 
 def myLoop():
     x='1'
-    while ((not rospy.is_shutdown())and (x in ['1','2','3','4','5','6','7'])):
+    while ((not rospy.is_shutdown())and (x in ['1','2','3','4','5','6','7','8'])):
         menu()
-        x = raw_input("Enter your input: ")
+        x = raw_input("Enter your input: \n")
         if (x=='1'):
             setGuidedMode()
         elif(x=='2'):
@@ -160,7 +161,7 @@ def myLoop():
             print ("longitude: %.7f" %longitude)
             print ("latitude: %.7f" %latitude)
         elif(x=='8'):
-            dest = raw_input("Enter location to go : example 2.8, 0.0, 2.0, 2.0")
+            dest = raw_input("Enter location to go : example 2.8, 0.0, 2.0, 2.0 \n")
             go_to_destination(dest)
         else: 
             print("Exit")
