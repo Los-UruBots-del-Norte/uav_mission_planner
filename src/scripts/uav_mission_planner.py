@@ -6,6 +6,7 @@ from sensor_msgs.msg import *
 from mavros_msgs.srv import *
 from mavros_msgs.msg import *
 from geographic_msgs.msg import *
+from geometry_msgs.msg import *
 
 #global variable
 latitude = 0.0
