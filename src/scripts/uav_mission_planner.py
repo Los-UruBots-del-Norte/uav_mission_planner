@@ -115,16 +115,31 @@ def pub_reset_gps():
     except rospy.ServiceException as e:
         print("Service reset_gps call failed: %s" % e)
 
+def pub_reset_gps():
+    msg = GeoPointStamped()
+    try:
+        reset_gps = rospy.Publisher("/mavros/global_position/set_gp_origin", GeoPointStamped, queue_size=10)
+        reset_gps.publish(msg)
+    except rospy.ServiceException as e:
+        print("Service reset_gps call failed: %s" % e)
+
 def go_to_destination(dest = "2.8, 0.0, 2.0, 1.0"):
     x, y, z, w = dest.split(",")
     setGuidedMode()
     time.sleep(1)
     pub_reset_gps()
+    time.sleep(1)
     rospy.set_param("/mavros/vision_pose/tf/listen", True)
     time.sleep(5)
     setArm()
+    time.sleep(1)
     setTakeoffMode()
+    time.sleep(5)
     set_target_position(x, y, z, w)
+    time.sleep(1)
+    setTakeoffMode()
+    time.sleep(1)
+    setDisarm()
 
 def menu():
     print("Press")
@@ -136,6 +151,7 @@ def menu():
     print("6: to set mode to LAND")
     print("7: print GPS coordinates")
     print("8: Go to destination")
+    print("9: fakegps")
 
 def myLoop():
     x='1'
@@ -160,8 +176,11 @@ def myLoop():
             print ("longitude: %.7f" %longitude)
             print ("latitude: %.7f" %latitude)
         elif(x=='8'):
-            dest = raw_input("Enter location to go : example 2.8, 0.0, 2.0, 2.0")
+            #dest = raw_input("Enter location to go : example 2.8, 0.0, 2.0, 2.0")
+            dest = "1.0,0.0,1.0,0.3"
             go_to_destination(dest)
+        elif(x=='9'):
+            pub_reset_gps()
         else: 
             print("Exit")
 
